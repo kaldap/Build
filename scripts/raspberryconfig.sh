@@ -167,6 +167,15 @@ apt-get -y remove binutils
 
 echo "Writing config.txt file"
 echo "initramfs volumio.initrd
+dtdebug=1
+dtoverlay=dpi565
+enable_dpi_lcd=1
+dpi_output_format=197138
+dpi_timings=1024 0 25 50 25  100 0 2 10 2 0 0 0  60 0 35000000 7
+dpi_group=2
+dpi_mode=87
+max_framebuffers=2
+framebuffer_priority=2
 gpu_mem=32
 max_usb_current=1
 dtparam=audio=on
@@ -175,8 +184,9 @@ dtparam=i2c_arm=on
 disable_splash=1
 hdmi_force_hotplug=1" >> /boot/config.txt
 
+
 echo "Writing cmdline.txt file"
-echo "splash quiet plymouth.ignore-serial-consoles dwc_otg.fiq_enable=1 dwc_otg.fiq_fsm_enable=1 dwc_otg.fiq_fsm_mask=0xF dwc_otg.nak_holdoff=1 console=serial0,115200 kgdboc=serial0,115200 console=tty1 imgpart=/dev/mmcblk0p2 imgfile=/volumio_current.sqsh elevator=noop rootwait bootdelay=5 logo.nologo vt.global_cursor_default=0 loglevel=0" >> /boot/cmdline.txt
+echo "splash quiet plymouth.ignore-serial-consoles dwc_otg.fiq_enable=1 dwc_otg.fiq_fsm_enable=1 dwc_otg.fiq_fsm_mask=0xF dwc_otg.nak_holdoff=1 dwc_otg.lpm_enable=0 console=serial0,115200 kgdboc=serial0,115200 console=tty1 imgpart=/dev/mmcblk0p2 imgfile=/volumio_current.sqsh elevator=noop rootwait bootdelay=5 logo.nologo vt.global_cursor_default=0 loglevel=0 consoleblank=0" >> /boot/cmdline.txt
 
 echo "adding gpio & spi group and permissions"
 groupadd -f --system gpio
@@ -270,6 +280,17 @@ fi
 rm /patch
 
 # Michelangelo said - CUSTOM CODE HERE!
+echo "Getting custom kernel"
+rm -rf /lib/modules/*
+wget http://127.0.0.1/kernel_bin/pi-kernel-${KERNEL_VERSION}.tar.gz
+tar xvf pi-kernel-${KERNEL_VERSION}.tar.gz --no-same-owner-C /
+rm pi-kernel-${KERNEL_VERSION}.tar.gz
+
+echo "Getting custom firmware"
+wget -P /boot/. http://127.0.0.1/kernel_bin/start_x.elf
+
+echo "Getting secondary LCD overlay"
+wget -P /boot/overlay/. http://127.0.0.1/kernel_bin/dpi565.dtbo
 
 # END OF Michelangelo said!
 
