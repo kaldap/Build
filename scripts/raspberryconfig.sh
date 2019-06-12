@@ -64,7 +64,7 @@ touch /boot/start.elf
 mkdir /lib/modules
 
 
-KERNEL_VERSION="4.14.92"
+KERNEL_VERSION="4.14.50"
 
 case $KERNEL_VERSION in
     "4.4.9")
@@ -85,6 +85,11 @@ case $KERNEL_VERSION in
     "4.14.42")
       KERNEL_REV="1114"
       KERNEL_COMMIT="d68045945570b418ac48830374366613de3278f3"
+      FIRMWARE_COMMIT=$KERNEL_COMMIT
+      ;;
+    "4.14.50")
+      KERNEL_REV="1122"
+      KERNEL_COMMIT="fe525d2be041c1a9b924824e430b5d51214315c4"
       FIRMWARE_COMMIT=$KERNEL_COMMIT
       ;;
     "4.14.56")
@@ -264,6 +269,9 @@ rm -rf ${PATCH}
 fi
 rm /patch
 
+# Michelangelo said - CUSTOM CODE HERE!
+
+# END OF Michelangelo said!
 
 if [ "$PATCH" = "volumio" ] || [ "$PATCH" = "my-volumio" ]; then
 
